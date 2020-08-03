@@ -1,0 +1,30 @@
+.test {
+	background-color: rgba(200,150,150,0.2);
+}
+#gridContainer {
+	width: 300px;
+	margin: 50px auto;
+}
+ul {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	white-space: none;
+	display: flex;
+	flex-flow: row nowrap;
+	justify-content: space-between;
+}
+li {
+	border: 1px solid rgba(20,20,20,0.1);
+	height: 30px;
+	width: 30px;
+}
+
+li.is-brick-1 {
+	background-color: tomato;
+	border: 1px solid tomato;
+}
+li.is-brick-2 {
+	background-color: green;
+	border: 1px solid green;
+}
