@@ -3,22 +3,109 @@
 var brickTest = {
 	isActive: true,
 	color: '1',
+	currentRotationStep: [
+		{
+			'A': true
+		},
+		{
+			'B': false
+		},
+		{
+			'C': false
+		},
+		{
+			'D': false
+		}
+	],
+
 	coords: [
 		{
 			x: 3,
-			y: 0
+			y: 0,
+			rotateModifier: {
+				'A': {
+					x: 2,
+					y: -2
+				},
+				'B': {
+					x: 2,
+					y: 2
+				},
+				'C': {
+					x: -2,
+					y: 2
+				},
+				'D': {
+					x: -2,
+					y: -2
+				}
+			}
 		},
 		{
 			x: 4,
-			y: 0
+			y: 0,
+			rotateModifier: {
+				'A': {
+					x: 1,
+					y: -1
+				},
+				'B': {
+					x: 1,
+					y: 1
+				},
+				'C': {
+					x: -1,
+					y: 1
+				},
+				'D': {
+					x: -1,
+					y: -1
+				}
+			}
 		},
 		{
 			x: 5,
-			y: 0
+			y: 0,
+			rotateModifier: {
+				'A': {
+					x: 0,
+					y: 0
+				},
+				'B': {
+					x: 0,
+					y: 0
+				},
+				'C': {
+					x: 0,
+					y: 0
+				},
+				'D': {
+					x: 0,
+					y: 0
+				}
+			}
 		},
 		{
 			x: 6,
-			y: 0
+			y: 0,
+			rotateModifier: {
+				'A': {
+					x: -1,
+					y: 1
+				},
+				'B': {
+					x: -1,
+					y: -1
+				},
+				'C': {
+					x: 1,
+					y: -1
+				},
+				'D': {
+					x: 1,
+					y: -1
+				}
+			}
 		}
 	]
 }
@@ -26,7 +113,19 @@ var bricks = [brickTest];
 var activeBrick = null;
 var brickTickerSpeed = 1.5;
 
+function getCurrentRotationStep(brick) {
+	for (let i = 0; i < brick.currentRotationStep.length; i++) {
+		for (var key in brick.currentRotationStep[i]) {
+			if(brick.currentRotationStep[i][key]) {
+				return key;
+			}
+		}
+	}
+}
 
+function moveOneRotationStep(brick) {
+	// TODO
+}
 
 
 function drawBricks() {
@@ -41,6 +140,34 @@ function drawBricks() {
 			let coords = onePiece.coords[j];
 			$('#' + coords.y + '-' + coords.x).addClass('is-brick-'+onePiece.color);
 		}
+	}
+}
+
+function rotateBrick() {
+	// check if rotation is possible
+	let currentStep = getCurrentRotationStep(activeBrick);
+	let tempBrick = activeBrick;
+	let isOkayToRotate = true;
+	let rotations;
+	for (var i = 0; i < tempBrick.coords.length; i++) {
+		// check if after rotation, position is out of bounds
+		rotations = activeBrick.coords[i].rotateModifier[currentStep];
+		if (
+			activeBrick.coords[i].x + rotations.x >= 10
+			|| activeBrick.coords[i].y + rotations.y >= 20
+		) {
+			isOkayToRotate = false;
+			break;
+		} 
+		else {
+			tempBrick.coords[i].x += rotations.x;
+			tempBrick.coords[i].y += rotations.y;
+		}
+	}
+	if(isOkayToRotate) {
+		activeBrick = tempBrick;
+		drawBricks();
+		moveOneRotationStep(brick);
 	}
 }
 
@@ -122,7 +249,7 @@ function handleKeyDownByKeyCode(kcode) {
      		}
      	break;
      	case 38: // up
-     		alert('doto: rotate O_o');
+     		rotateBrick();
      	break;
      	case 39: // right
      		for (var i = 0; i < activeBrick.coords.length; i++) {
